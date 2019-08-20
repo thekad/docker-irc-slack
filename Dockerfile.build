@@ -1,0 +1,8 @@
+FROM golang:1.12-alpine
+
+RUN apk update && \
+    apk add --no-cache git dumb-init && \
+    go get -d -v github.com/insomniacslk/irc-slack/... && \
+    cd $GOPATH/src/github.com/insomniacslk/irc-slack/ && \
+    GOOS=linux GOARCH=amd64 go build -ldflags="-w -s" -o /go/bin/irc-slack
+
