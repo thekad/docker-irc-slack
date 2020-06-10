@@ -1,10 +1,14 @@
 FROM golang:1.13-alpine AS builder
 
+ENV GO111MODULE=on
+
 RUN apk update && \
     apk add --no-cache git && \
     go get -d -v github.com/insomniacslk/irc-slack/... && \
     cd $GOPATH/src/github.com/insomniacslk/irc-slack/ && \
-    go build -ldflags="-w -s" -o /go/bin/irc-slack
+    CGO_ENABLED=0 go build -ldflags="-w -s" -o /go/bin/irc-slack
+
+# use alpine:latest to use dumb-init
 
 FROM docker.io/library/alpine:latest
 
